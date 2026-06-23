@@ -1,0 +1,50 @@
+{% extends 'shop/base.html' %}
+{% block title %}{{ product.name }} — ВЕЩЬ.СТОР{% endblock %}
+{% block content %}
+<section class="container breadcrumbs">
+    <a href="{% url 'shop:home' %}">Главная</a> /
+    <a href="{% url 'shop:catalog' %}">Каталог</a> /
+    <a href="{% url 'shop:catalog' %}?category={{ product.category.slug }}">{{ product.category.name }}</a> /
+    <span>{{ product.name }}</span>
+</section>
+
+<section class="product container">
+    <div class="product__gallery">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <div class="product__placeholder">{{ product.name|first }}</div>
+        {% endif %}
+        {% if product.discount_percent %}<span class="product__badge">−{{ product.discount_percent }}%</span>{% endif %}
+    </div>
+    <div class="product__info">
+        <span class="product__cat">{{ product.category.name }}</span>
+        <h1>{{ product.name }}</h1>
+        <div class="product__price">
+            <span class="price price--lg">{{ product.price }} ₽</span>
+            {% if product.old_price %}<span class="price-old price-old--lg">{{ product.old_price }} ₽</span>{% endif %}
+        </div>
+        <p class="product__desc">{{ product.description|default:"Описание скоро появится." }}</p>
+        <div class="product__stock {% if product.in_stock %}in{% else %}out{% endif %}">
+            {% if product.in_stock %}● В наличии{% else %}● Нет в наличии{% endif %}
+        </div>
+        {% if product.in_stock %}
+        <form action="{% url 'shop:cart_add' product.id %}" method="post" class="product__buy">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'shop:cart_detail' %}">
+            <input type="number" name="quantity" value="1" min="1" max="20" class="qty">
+            <button type="submit" class="btn btn--primary btn--lg">Добавить в корзину</button>
+        </form>
+        {% endif %}
+    </div>
+</section>
+
+{% if related %}
+<section class="section container">
+    <div class="section__head"><h2>Похожие товары</h2></div>
+    <div class="product-grid">
+        {% for product in related %}{% include 'shop/_product_card.html' %}{% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

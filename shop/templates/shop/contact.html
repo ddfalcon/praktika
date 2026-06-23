@@ -1,0 +1,25 @@
+{% extends 'shop/base.html' %}
+{% block title %}Контакты — ВЕЩЬ.СТОР{% endblock %}
+{% block content %}
+<section class="page-head container"><h1>Контакты</h1><p>Свяжитесь с нами любым удобным способом</p></section>
+<section class="container contact">
+    <div class="contact__info">
+        <div class="contact__item"><span>📍 Адрес</span><p>г. Новосибирск, ул. Примерная, 1</p></div>
+        <div class="contact__item"><span>📞 Телефон</span><p>+7 (383) 000-00-00</p></div>
+        <div class="contact__item"><span>✉ E-mail</span><p>info@veshstore.ru</p></div>
+        <div class="contact__item"><span>🕐 Часы работы</span><p>Пн–Вс: 10:00 – 20:00</p></div>
+    </div>
+    <form method="post" class="contact__form" novalidate>
+        {% csrf_token %}
+        <h3>Напишите нам</h3>
+        {% for field in form %}
+        <div class="field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<span class="field__error">{{ field.errors.0 }}</span>{% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn--primary btn--lg">Отправить</button>
+    </form>
+</section>
+{% endblock %}

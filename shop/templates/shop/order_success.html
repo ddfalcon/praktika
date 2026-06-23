@@ -1,0 +1,11 @@
+{% extends 'shop/base.html' %}
+{% block title %}Заказ оформлен — ВЕЩЬ.СТОР{% endblock %}
+{% block content %}
+<section class="container success">
+    <div class="success__icon">✓</div>
+    <h1>Заказ #{{ order.pk }} оформлен!</h1>
+    <p>Спасибо, {{ order.name }}! Мы свяжемся с вами по телефону {{ order.phone }} для подтверждения.</p>
+    <p class="success__total">Сумма заказа: <strong>{{ order.total }} ₽</strong></p>
+    <a href="{% url 'shop:catalog' %}" class="btn btn--primary">Вернуться в каталог</a>
+</section>
+{% endblock %}

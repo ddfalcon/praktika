@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ВЕЩЬ.СТОР — интернет-магазин одежды{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
+</head>
+<body>
+<canvas class="site-glow" id="siteGlow" aria-hidden="true"></canvas>
+<header class="header">
+    <div class="container header__inner">
+        <a href="{% url 'shop:home' %}" class="logo">ВЕЩЬ<span>.СТОР</span></a>
+        <nav class="nav" id="nav">
+            <a href="{% url 'shop:home' %}">Главная</a>
+            <a href="{% url 'shop:catalog' %}">Каталог</a>
+            <a href="{% url 'shop:about' %}">О магазине</a>
+            <a href="{% url 'shop:contact' %}">Контакты</a>
+        </nav>
+        <div class="header__actions">
+            <form action="{% url 'shop:catalog' %}" method="get" class="search">
+                <input type="text" name="q" placeholder="Поиск..." value="{{ query|default:'' }}">
+                <button type="submit" aria-label="Найти">⌕</button>
+            </form>
+            <a href="{% url 'shop:cart_detail' %}" class="cart-btn">
+                Корзина
+                {% if cart_count %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+            </a>
+            <button class="burger" id="burger" aria-label="Меню">☰</button>
+        </div>
+    </div>
+</header>
+
+{% if messages %}
+<div class="container">
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert--{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="container footer__inner">
+        <div>
+            <a href="{% url 'shop:home' %}" class="logo logo--footer">ВЕЩЬ<span>.СТОР</span></a>
+            <p class="footer__text">Одежда и аксессуары с доставкой по России.</p>
+        </div>
+        <div class="footer__col">
+            <h4>Каталог</h4>
+            {% for cat in menu_categories %}
+            <a href="{% url 'shop:catalog' %}?category={{ cat.slug }}">{{ cat.name }}</a>
+            {% endfor %}
+        </div>
+        <div class="footer__col">
+            <h4>Информация</h4>
+            <a href="{% url 'shop:about' %}">О магазине</a>
+            <a href="{% url 'shop:contact' %}">Контакты</a>
+            <a href="{% url 'shop:cart_detail' %}">Корзина</a>
+        </div>
+        <div class="footer__col">
+            <h4>Контакты</h4>
+            <p class="footer__text">г. Новосибирск<br>+7 (383) 000-00-00<br>info@veshstore.ru</p>
+        </div>
+    </div>
+    <div class="container footer__bottom">© 2026 ВЕЩЬ.СТОР. Учебный проект.</div>
+</footer>
+
+<script src="{% static 'shop/js/shader-bg.js' %}"></script>
+<script src="{% static 'shop/js/main.js' %}"></script>
+</body>
+</html>

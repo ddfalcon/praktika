@@ -1,0 +1,29 @@
+{% extends 'shop/base.html' %}
+{% block title %}Оформление заказа — ВЕЩЬ.СТОР{% endblock %}
+{% block content %}
+<section class="page-head container"><h1>Оформление заказа</h1></section>
+<section class="container checkout">
+    <form method="post" class="checkout__form" novalidate>
+        {% csrf_token %}
+        <h3>Контактные данные</h3>
+        {% for field in form %}
+        <div class="field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<span class="field__error">{{ field.errors.0 }}</span>{% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn--primary btn--lg">Подтвердить заказ</button>
+    </form>
+    <aside class="checkout__summary">
+        <h3>Ваш заказ</h3>
+        {% for item in cart %}
+        <div class="checkout__item">
+            <span>{{ item.product.name }} × {{ item.quantity }}</span>
+            <span>{{ item.subtotal }} ₽</span>
+        </div>
+        {% endfor %}
+        <div class="checkout__total"><span>Итого</span><strong>{{ cart.total }} ₽</strong></div>
+    </aside>
+</section>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'shop/base.html' %}
+{% block title %}Каталог — ВЕЩЬ.СТОР{% endblock %}
+{% block content %}
+<section class="page-head container">
+    <h1>Каталог</h1>
+    <p>{% if active_category %}Категория: {{ active_category }}{% else %}Все товары магазина{% endif %}</p>
+</section>
+
+<section class="catalog container">
+    <aside class="catalog__sidebar">
+        <h3>Категории</h3>
+        <a href="{% url 'shop:catalog' %}" class="filter {% if not active_category %}filter--active{% endif %}">Все товары</a>
+        {% for cat in categories %}
+        <a href="{% url 'shop:catalog' %}?category={{ cat.slug }}" class="filter {% if active_category == cat.slug %}filter--active{% endif %}">{{ cat.name }}</a>
+        {% endfor %}
+    </aside>
+
+    <div class="catalog__main">
+        <div class="catalog__toolbar">
+            <span>{{ products|length }} товар(ов)</span>
+            <form method="get" class="sort">
+                {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}">{% endif %}
+                {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+                <select name="sort" onchange="this.form.submit()">
+                    <option value="">Сортировка</option>
+                    <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Сначала дешёвые</option>
+                    <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Сначала дорогие</option>
+                    <option value="name" {% if sort == 'name' %}selected{% endif %}>По названию</option>
+                </select>
+            </form>
+        </div>
+
+        {% if products %}
+        <div class="product-grid">
+            {% for product in products %}{% include 'shop/_product_card.html' %}{% endfor %}
+        </div>
+        {% else %}
+        <div class="empty">Ничего не найдено. Попробуйте изменить запрос.</div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
